@@ -1,62 +1,103 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { Ref, ref } from 'vue';
   import TextAnalysisServices from './services/TextAnalysisService';
   import Loader from './components/Loader.vue';
+  import FeedbackSubmission from "./components/FeedbackSubmission.vue";
+  import type {TextAnalysisResponseDTO} from "./model/TextAnalysis";
 
   const imageUri = ref('https://picsum.photos/300/300');
   const prompt = ref('');
-  const isLoading = ref(false);
 
-  async function handlePromptChange(){
+  const reviewChoices = ref([]);
+
+  const isLoading = ref(false);
+  const isReviewing = ref(false);
+  const isResultDisplayed = ref(false);
+  const feedbackId = ref('');
+
+  async function onClickSubmitPrompt(){
     console.log("Analyzing text:", prompt);
 
     isLoading.value = true;
 
-    setTimeout(() => {
-      isLoading.value = false;
-      imageUri.value = TextAnalysisServices.textAnalysis(prompt.value);
-    }, 5000); 
+    const response: TextAnalysisResponseDTO = await TextAnalysisServices.textAnalysis(prompt.value);
+
+    imageUri.value = response.image_uri
+
+    isLoading.value = false;
+    isResultDisplayed.value = true;
+
+    feedbackId.value = response.feedback_id;
+
+    // Feed the Reviewing Modal data
+    reviewChoices.value = await TextAnalysisServices.feedbackPrompt(response.feedback_id);
+
+    // @TODO Store Feedback ID to Database
+
+    console.log(reviewChoices.value);
+
+  }
+
+  async function onClickFeedbackButton(){
+    isReviewing.value = true;
+  }
+
+  async function onClickCloseFeedbackSubmission(){
+    isReviewing.value = false;
+  }
+
+  async function onSubmitFeedbackSubmission(feedbackId: string){
+
   }
 </script>
 
 <template>
   <Loader v-if="isLoading" />
+  <FeedbackSubmission 
+    v-if="isReviewing" 
+    :reviewChoices="reviewChoices"
+    :prompt="prompt"
+    :currentExpression="imageUri"
+    :feedbackId="feedbackId"
+    />
 
-  <main class="container mx-auto">
-    <div class="w-full flex justify-center items-center m-6">
-      <h1 class="text-7xl font-bold text-fluorescent text-glow">McAstr PA</h1>
+  <main class="container">
+    <div class="m-2">
+      <h1 class="text-7xl font-bold neon-title">McAstr PA</h1>
     </div>
 
-    <div class="w-full flex justify-center items-center m-6">
+    <div class="m-2">
       <img 
         :src="imageUri" 
-        class="border-4 border-gray-400 rounded-lg shadow-lg" 
+        class="picture-box" 
         alt="Lah" 
-        height="300" 
-        width="300" 
         />
     </div>
 
-    <div class="w-full flex justify-center items-center m-6">
+    <div class="input-section">
       <textarea
         v-model="prompt"
         style="resize: none;"
         placeholder="Input something and let Bocchi display her reaction towards it. e.g. 'Through the storm and silence, I carried your name in my heart, hoping you’d hear it in the wind. Even in the dark, I kept searching—because losing you feels like losing the whole sky.'"
-        class="w-full h-52 border-2 border-white rounded-lg bg-transparent text-[#F0F0F0] p-4 text-lg outline-none"
+        class="prompt-textarea"
         ></textarea>
     </div>
 
-    <div class="w-full flex justify-center items-center m-6">
-      <button
-        @click="handlePromptChange()"
-        class="bg-fluorescent text-black font-bold py-2 px-6 rounded-lg shadow-md hover:bg-cyan-300 transition-colors">
-        Submit
-      </button>
-    </div>
-
-    <div class="w-full flex justify-center items-center m-6 bg-white">
-      <p>Lah</p>
-      <p v-text="prompt"></p>
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-6">
+          <button
+            @click="onClickSubmitPrompt()"
+            class="submit-btn">
+            ✨ Generate Expression
+          </button>
+      </div>
+      <div v-if="isResultDisplayed" class="col-span-6 flex justify-end">
+          <button
+            @click="onClickFeedbackButton()"
+            class="submit-btn">
+            💬 Am I guess it wrong?
+          </button>
+      </div>
     </div>
   </main>
 </template>
