@@ -33,20 +33,10 @@ async function selectImage(selectedData: string){
 
 async function submitFeedback(){
 
-    console.log("Submit Feedback triggered: ", choiceId.value);
-
     if (!choiceId.value) {
         alert("Please select an image before submitting.");
         return;
     }
-
-    // const request: FeedbackSubmissionRequestDTO = {
-    //     feedback_id: props.feedbackId,
-    //     review_id: choiceId.value
-    // }
-
-    // console.log("Submitting feedback:", request);
-
 
     await TextAnalysisService.feedbackSubmission(props.feedbackId, choiceId.value);
     alert("Your feedback is successfully submitted. Thank you!");
