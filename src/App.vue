@@ -59,6 +59,7 @@
     :prompt="prompt"
     :currentExpression="imageUri"
     :feedbackId="feedbackId"
+    v-model="isReviewing"
     />
 
   <main class="container">
