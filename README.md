@@ -1,4 +1,27 @@
-# /
+# # McAstr PA's Frontend
+
+This repository contains implementation of frontend for my blog post titled 
+**"Building an Emotion Aware Response Model through Sentiment Analysis and Information Crowding Architecture"**.
+
+For initial setup the environment, you may use Yarn.
+
+> Install Yarn
+>
+> `npm install -g yarn`
+
+> Setting up Environment Variable
+>
+> Setup the `.env` file in the root project, as referenced by `.env.example`. For reference, my local environment variable is as follow:
+>
+> ```
+> VITE_API_URI=http://localhost:8000/api
+> VITE_SECRET=DYwa7BPn4l74LnalgqYqQTXg3OLSENvc
+> ```
+>
+> Make sure the VITE_SECRET value identical with the FastAPI implementation. 
+
+
+I will keep the original Vue.JS's readme md since it is helping. 
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -32,14 +55,8 @@ yarn dev
 yarn build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+# Contribution
 
-```sh
-yarn test:unit
-```
+Interested to contribute in this repository? Any questions or feedbacks?
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-yarn lint
-```
+Feel free to email me to yosua_kristianto144@outlook.com

@@ -5,7 +5,7 @@ import Loader from './components/Loader.vue'
 import FeedbackSubmission from './components/FeedbackSubmission.vue'
 import type { TextAnalysisResponseDTO } from './model/TextAnalysis'
 
-const imageUri = ref('https://picsum.photos/300/300')
+const imageUri = ref('https://raw.githubusercontent.com/yosua-kristianto/mcastr-pa-be/refs/heads/resources/bocchi/resources/bocchi/2/2_5.jpg')
 const prompt = ref('')
 
 const reviewChoices = ref([])
